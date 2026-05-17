@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Soenneker.Asyncs.Initializers;
 using Soenneker.Extensions.ValueTask;
+using Soenneker.TimeZones.Lookup.Abstract;
 using Soenneker.Utils.File.Abstract;
 using Soenneker.Utils.Paths.Resources.Abstract;
 using Soenneker.ZipCodes.Lookup.Abstract;
@@ -21,13 +22,15 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
     private readonly IFileUtil _fileUtil;
     private readonly IResourcesPathUtil _resourcesPathUtil;
+    private readonly ITimeZoneLookupUtil _timeZoneLookupUtil;
     private readonly AsyncInitializer _initializer;
     private ZipCodeIndex? _index;
 
-    public ZipCodeLookupUtil(IFileUtil fileUtil, IResourcesPathUtil resourcesPathUtil)
+    public ZipCodeLookupUtil(IFileUtil fileUtil, IResourcesPathUtil resourcesPathUtil, ITimeZoneLookupUtil timeZoneLookupUtil)
     {
         _fileUtil = fileUtil;
         _resourcesPathUtil = resourcesPathUtil;
+        _timeZoneLookupUtil = timeZoneLookupUtil;
         _initializer = new AsyncInitializer(Initialize);
     }
 
@@ -97,6 +100,16 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
         ZipCodeIndex index = await GetIndex(cancellationToken);
         return index.ByZipCodeCoordinates.TryGetValue(normalizedZipCode, out ZipCodeCoordinates coordinates) ? coordinates : null;
+    }
+
+    public async ValueTask<string?> GetTimeZoneId(string zipCode, CancellationToken cancellationToken = default)
+    {
+        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken);
+
+        if (coordinates == null)
+            return null;
+
+        return await _timeZoneLookupUtil.GetTimeZoneId(coordinates.Value.Latitude, coordinates.Value.Longitude, cancellationToken);
     }
 
     public async ValueTask<IReadOnlyList<ZipCodeInfo>> GetByState(string state, CancellationToken cancellationToken = default)

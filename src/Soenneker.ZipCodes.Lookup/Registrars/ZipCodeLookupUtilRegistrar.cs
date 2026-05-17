@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Soenneker.TimeZones.Lookup.Registrars;
 using Soenneker.Utils.File.Registrars;
 using Soenneker.Utils.Paths.Resources.Registrars;
 using Soenneker.ZipCodes.Lookup.Abstract;
@@ -18,6 +19,7 @@ public static class ZipCodeLookupUtilRegistrar
     {
         services.AddFileUtilAsSingleton()
                 .AddResourcesPathUtilAsSingleton()
+                .AddTimeZoneLookupUtilAsSingleton()
                 .TryAddSingleton<IZipCodeLookupUtil, ZipCodeLookupUtil>();
 
         return services;
@@ -30,6 +32,7 @@ public static class ZipCodeLookupUtilRegistrar
     {
         services.AddFileUtilAsScoped()
                 .AddResourcesPathUtilAsScoped()
+                .AddTimeZoneLookupUtilAsScoped()
                 .TryAddScoped<IZipCodeLookupUtil, ZipCodeLookupUtil>();
 
         return services;

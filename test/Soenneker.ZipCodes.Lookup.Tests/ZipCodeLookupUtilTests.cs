@@ -60,6 +60,16 @@ public sealed class ZipCodeLookupUtilTests : HostedUnitTest
     }
 
     [Test]
+    public async ValueTask GetTimeZoneId_should_return_time_zone_id()
+    {
+        string? chicago = await _util.GetTimeZoneId("60601");
+        string? losAngeles = await _util.GetTimeZoneId("90210");
+
+        chicago.Should().Be("America/Chicago");
+        losAngeles.Should().Be("America/Los_Angeles");
+    }
+
+    [Test]
     public async ValueTask GetCity_and_GetState_should_return_values()
     {
         string? city = await _util.GetCity("60601");

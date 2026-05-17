@@ -55,6 +55,11 @@ public interface IZipCodeLookupUtil
     ValueTask<ZipCodeCoordinates?> GetCoordinates(string zipCode, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets the IANA time zone identifier for a ZIP code, if present.
+    /// </summary>
+    ValueTask<string?> GetTimeZoneId(string zipCode, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets all ZIP code records in a state or territory.
     /// </summary>
     ValueTask<IReadOnlyList<ZipCodeInfo>> GetByState(string state, CancellationToken cancellationToken = default);

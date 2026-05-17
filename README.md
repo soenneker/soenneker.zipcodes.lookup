@@ -22,6 +22,7 @@ ZipCodeInfo? info = await zipCodeLookupUtil.Get("90210");
 string? city = await zipCodeLookupUtil.GetCity("90210");
 string? state = await zipCodeLookupUtil.GetState("90210");
 (double Latitude, double Longitude)? coordinates = await zipCodeLookupUtil.GetLatitudeLongitude("90210");
+string? timeZoneId = await zipCodeLookupUtil.GetTimeZoneId("90210");
 
 ZipCodeCoordinates? fastCoordinates = await zipCodeLookupUtil.GetCoordinates("90210");
 
