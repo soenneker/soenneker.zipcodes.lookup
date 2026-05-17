@@ -45,7 +45,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
         if (!TryParseZipCode(zipCode, out int normalizedZipCode))
             return null;
 
-        ZipCodeIndex index = await GetIndex(cancellationToken);
+        ZipCodeIndex index = await GetIndex(cancellationToken).NoSync();
         index.ByZipCode.TryGetValue(normalizedZipCode, out ZipCodeInfo? info);
         return info;
     }
@@ -55,13 +55,13 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
         if (!TryParseZipCode(zipCode, out int normalizedZipCode))
             return false;
 
-        ZipCodeIndex index = await GetIndex(cancellationToken);
+        ZipCodeIndex index = await GetIndex(cancellationToken).NoSync();
         return index.ByZipCode.ContainsKey(normalizedZipCode);
     }
 
     public async ValueTask<string?> GetCity(string zipCode, CancellationToken cancellationToken = default)
     {
-        ZipCodeInfo? info = await Get(zipCode, cancellationToken);
+        ZipCodeInfo? info = await Get(zipCode, cancellationToken).NoSync();
         return info?.City;
     }
 
@@ -73,7 +73,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
     public async ValueTask<double?> GetLatitude(string zipCode, CancellationToken cancellationToken = default)
     {
-        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken);
+        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken).NoSync();
         return coordinates?.Latitude;
     }
 
@@ -85,7 +85,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
     public async ValueTask<(double Latitude, double Longitude)?> GetLatitudeLongitude(string zipCode, CancellationToken cancellationToken = default)
     {
-        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken);
+        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken).NoSync();
 
         if (coordinates == null)
             return null;
@@ -98,18 +98,18 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
         if (!TryParseZipCode(zipCode, out int normalizedZipCode))
             return null;
 
-        ZipCodeIndex index = await GetIndex(cancellationToken);
+        ZipCodeIndex index = await GetIndex(cancellationToken).NoSync();
         return index.ByZipCodeCoordinates.TryGetValue(normalizedZipCode, out ZipCodeCoordinates coordinates) ? coordinates : null;
     }
 
     public async ValueTask<string?> GetTimeZoneId(string zipCode, CancellationToken cancellationToken = default)
     {
-        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken);
+        ZipCodeCoordinates? coordinates = await GetCoordinates(zipCode, cancellationToken).NoSync();
 
         if (coordinates == null)
             return null;
 
-        return await _timeZoneLookupUtil.GetTimeZoneId(coordinates.Value.Latitude, coordinates.Value.Longitude, cancellationToken);
+        return await _timeZoneLookupUtil.GetTimeZoneId(coordinates.Value.Latitude, coordinates.Value.Longitude, cancellationToken).NoSync();
     }
 
     public async ValueTask<IReadOnlyList<ZipCodeInfo>> GetByState(string state, CancellationToken cancellationToken = default)
@@ -117,7 +117,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
         if (string.IsNullOrWhiteSpace(state))
             return _emptyList;
 
-        ZipCodeIndex index = await GetIndex(cancellationToken);
+        ZipCodeIndex index = await GetIndex(cancellationToken).NoSync();
         return index.ByState.GetValueOrDefault(state.Trim(), _emptyList);
     }
 
@@ -126,7 +126,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
         if (string.IsNullOrWhiteSpace(city))
             return _emptyList;
 
-        ZipCodeIndex index = await GetIndex(cancellationToken);
+        ZipCodeIndex index = await GetIndex(cancellationToken).NoSync();
         return index.ByCity.GetValueOrDefault(city.Trim(), _emptyList);
     }
 
@@ -137,7 +137,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
         string key = BuildCityStateKey(city.Trim(), state.Trim());
 
-        ZipCodeIndex index = await GetIndex(cancellationToken);
+        ZipCodeIndex index = await GetIndex(cancellationToken).NoSync();
         return index.ByCityState.GetValueOrDefault(key, _emptyList);
     }
 
@@ -157,7 +157,7 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
     private async ValueTask Initialize(CancellationToken cancellationToken)
     {
-        _index = await LoadIndex(cancellationToken);
+        _index = await LoadIndex(cancellationToken).NoSync();
     }
 
     private async ValueTask<ZipCodeIndex> LoadIndex(CancellationToken cancellationToken)
