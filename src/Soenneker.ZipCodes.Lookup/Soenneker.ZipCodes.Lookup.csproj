@@ -46,7 +46,7 @@
         <PackageReference Include="Soenneker.Asyncs.Initializers" Version="4.0.54" />
         <PackageReference Include="Soenneker.TimeZones.Lookup" Version="4.0.7" PrivateAssets="analyzers;build"/>
         <PackageReference Include="Soenneker.Utils.File" Version="4.0.2158" />
-        <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.149" />
+        <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.154" />
         <PackageReference Include="Soenneker.ZipCodes.Data.GeoNames" Version="4.0.2" PrivateAssets="analyzers;build" />
     </ItemGroup>
 </Project>
