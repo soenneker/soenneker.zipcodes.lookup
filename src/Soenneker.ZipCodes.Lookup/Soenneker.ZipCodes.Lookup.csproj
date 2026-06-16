@@ -43,7 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Asyncs.Initializers" Version="4.0.56" />
+        <PackageReference Include="Soenneker.Asyncs.Initializers" Version="4.0.57" />
         <PackageReference Include="Soenneker.TimeZones.Lookup" Version="4.0.20" PrivateAssets="analyzers;build"/>
         <PackageReference Include="Soenneker.Utils.File" Version="4.0.2175" />
         <PackageReference Include="Soenneker.Utils.Paths.Resources" Version="4.0.163" />
