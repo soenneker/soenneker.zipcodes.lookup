@@ -183,16 +183,19 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
             if (string.IsNullOrWhiteSpace(line))
                 continue;
 
-            string[] columns = line.Split('\t');
+            ReadOnlySpan<char> lineSpan = line;
+            Span<Range> columns = stackalloc Range[5];
+            int columnCount = lineSpan.Split(columns, '\t');
 
-            if (columns.Length != 5)
+            if (columnCount != 5)
                 throw new InvalidDataException($"Unexpected ZIP code geometry format at line {lineNumber}. Expected 5 tab-delimited columns.");
 
-            if (!TryParseZipCode(columns[0], out int zipCode))
+            ReadOnlySpan<char> zip = lineSpan[columns[0]];
+            if (!TryParseZipCode(zip, out int zipCode))
                 throw new InvalidDataException($"Unexpected ZIP code geometry format at line {lineNumber}. ZIP code must be numeric.");
 
-            var info = new ZipCodeInfo(columns[0], columns[1], columns[2], double.Parse(columns[3], CultureInfo.InvariantCulture),
-                double.Parse(columns[4], CultureInfo.InvariantCulture));
+            var info = new ZipCodeInfo(zip.ToString(), lineSpan[columns[1]].ToString(), lineSpan[columns[2]].ToString(),
+                double.Parse(lineSpan[columns[3]], CultureInfo.InvariantCulture), double.Parse(lineSpan[columns[4]], CultureInfo.InvariantCulture));
 
             all.Add(info);
             byZipCode[zipCode] = info;
@@ -224,7 +227,12 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
         if (string.IsNullOrWhiteSpace(zipCode))
             return false;
 
-        zipCode = zipCode.Trim();
+        return TryParseZipCode(zipCode.AsSpan().Trim(), out result);
+    }
+
+    private static bool TryParseZipCode(ReadOnlySpan<char> zipCode, out int result)
+    {
+        result = 0;
         int length = Math.Min(zipCode.Length, 5);
 
         for (var i = 0; i < length; i++)
@@ -257,7 +265,8 @@ public sealed class ZipCodeLookupUtil : IZipCodeLookupUtil
 
         foreach (KeyValuePair<string, List<ZipCodeInfo>> pair in source)
         {
-            result[pair.Key] = pair.Value.ToArray();
+            pair.Value.TrimExcess();
+            result[pair.Key] = pair.Value;
         }
 
         return result.ToFrozenDictionary(source.Comparer);
