@@ -27,4 +27,7 @@
         <ProjectReference Include="..\..\src\Soenneker.ZipCodes.Lookup\Soenneker.ZipCodes.Lookup.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="AwesomeAssertions" Version="9.6.0" />
+    </ItemGroup>
 </Project>
