@@ -46,10 +46,10 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Asyncs.Initializers" Version="4.0.128" />
-        <PackageReference Include="Soenneker.TimeZones.Lookup" Version="4.0.172" PrivateAssets="analyzers;build" />
+        <PackageReference Include="Soenneker.TimeZones.Lookup" Version="4.0.173" PrivateAssets="analyzers;build" />
 <PackageReference Include="Soenneker.ZipCodes.Data.GeoNames" Version="4.0.153" PrivateAssets="analyzers;build" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Soenneker.Extensions.ValueTask" Version="4.0.132" />
+        <PackageReference Include="Soenneker.Extensions.ValueTask" Version="4.0.133" />
     </ItemGroup>
 </Project>
