@@ -47,7 +47,7 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Asyncs.Initializers" Version="11.0.134" />
-        <PackageReference Include="Soenneker.TimeZones.Lookup" Version="11.0.182" PrivateAssets="analyzers;build" />
+        <PackageReference Include="Soenneker.TimeZones.Lookup" Version="11.0.183" PrivateAssets="analyzers;build" />
 <PackageReference Include="Soenneker.ZipCodes.Data.GeoNames" Version="4.0.153" PrivateAssets="analyzers;build" />
     </ItemGroup>
     <ItemGroup>
